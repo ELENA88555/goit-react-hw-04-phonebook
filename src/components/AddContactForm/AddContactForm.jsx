@@ -1,43 +1,42 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import css from "./AddContactForm.module.css"
 
-export class AddContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+export const AddContactForm = ({onSubmit}) => {
+
+  const [name, setName] = useState('')
+  const [number, setNumber] = useState('')
+
+ const loginInputId = nanoid();
+
+
+ const handleChangeForm = event => {
+    const {value, name} = event.target;
+if (name === 'name') setName(value)
+if (name==='number') setNumber(value)
+
   };
-  loginInputId = nanoid();
-
-
-  handleChangeForm = event => {
-    const {name, value} = event.target;
-    this.setState({[name]: value });
-
-  };
 
 
 
-  handleSubmitForm = event => {
+const  handleSubmitForm = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    onSubmit({name, number});
+    setName('')
+    setNumber('')
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
-  };
 
-  render() {
-    const { name, number } = this.state;
+ 
+
     return (
-      <form className={css.form}onSubmit={this.handleSubmitForm}>
+      <form className={css.form}onSubmit={handleSubmitForm}>
         <div className={css.container}>
-        <label  htmlFor={this.loginInputId}>
+        <label  htmlFor={loginInputId}>
          <span className={css.labelName}>Name</span> </label>
         <input
-          onChange={this.handleChangeForm}
-          id={this.loginInputId}
+          onChange={handleChangeForm}
+          id={loginInputId}
           type="text"
           name="name"
           className={css.inputForm}
@@ -50,12 +49,12 @@ export class AddContactForm extends Component {
 
 
         <div className={css.container}>
-          <label className={css.wrape} htmlFor={this.loginInputId}> <span className={css.labelName}> Number </span></label>
+          <label className={css.wrape} htmlFor={loginInputId}> <span className={css.labelName}> Number </span></label>
            
              <input
              className={css.inputForm}
-              id={this.loginInputId}
-              onChange={this.handleChangeForm}
+              id={loginInputId}
+              onChange={handleChangeForm}
               type="tel"
               name="number"
               value={number}
@@ -67,7 +66,7 @@ export class AddContactForm extends Component {
         <button type="submit"  className={css.btnForm} disabled ={!name.length>0 }> Add contact</button>
       </form>
     );
-  }
+  
 }
 
 
