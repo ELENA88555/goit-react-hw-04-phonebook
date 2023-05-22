@@ -1,31 +1,25 @@
-import React, { useEffect, useState  } from 'react';
+import React, { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { ContactList } from './ContactList/ContactList';
 import { AddContactForm } from './AddContactForm/AddContactForm';
 import { Filter } from './Filter/Filter';
 import css from './App.module.css';
 
-export const App = ()=> {
+export const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
 
-  const [ contacts, setContacts] = useState([])
-  const [filter, setFilter] = useState('')
-
-
-
-
-
-  useEffect(()=>{
+  useEffect(() => {
     const contacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(contacts);
     if (parsedContacts) {
-      setContacts( parsedContacts);
+      setContacts(parsedContacts);
     }
   }, []);
 
-  useEffect(()=> {
-    localStorage.setItem('contacts', JSON.stringify(contacts))
-    },[contacts])
-
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   // state = {
   //   contacts: [
@@ -45,20 +39,15 @@ export const App = ()=> {
   //   }
   // }
 
-
-
-
-
-
   // componentDidUpdate(prevProps, prevState) {
   //   if (this.state.contacts !== prevState.contacts) {
   //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
   //   }
   // }
 
- const loginInputId = nanoid();
+  const loginInputId = nanoid();
 
- const addNewContact = ({name, number }) => {
+  const addNewContact = ({ name, number }) => {
     const contact = {
       id: nanoid(),
       name,
@@ -66,55 +55,48 @@ export const App = ()=> {
     };
     contacts.find(contact => contact.name === name)
       ? alert(`${name} is alredy in contact`)
-      : setContacts(
-        prevContacts => [contact, ...prevContacts])
+      : setContacts(prevContacts => [contact, ...prevContacts]);
   };
 
- const filtrChangeHandler = ({target:{value}}) => {
-  setFilter(value);
+  const filtrChangeHandler = ({ target: { value } }) => {
+    setFilter(value);
   };
 
- const getVisibleContacts = () => {
-     return contacts.filter(contact =>
+  const getVisibleContacts = () => {
+    return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase().trim())
     );
   };
 
- const btnDeleteHandler = contactId => {
-  setContacts(prevState => 
-     prevState.filter(contact => contact.id !== contactId),
+  const btnDeleteHandler = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId)
     );
-    setFilter('')
+    setFilter('');
   };
 
+  return (
+    <div>
+      <div className={css.thumble}>
+        <h1 className={css.title}>Phonebook</h1>
 
+        <AddContactForm onSubmit={addNewContact}></AddContactForm>
+        <h2 className={css.titleText}> Contacts</h2>
 
-    return (
-      <div>
-        <div className={css.thumble}>
-          <h1 className={css.title}>Phonebook</h1>
-
-          <AddContactForm onSubmit={addNewContact}></AddContactForm>
-          <h2 className={css.titleText}> Contacts</h2>
-
-          {contacts.length < 1 ? (
-            <p className={css.textApp}> You have no contacts saved</p>
-          ) : (
-            <>
-              <Filter
-                value={filter}
-                changeFilter={filtrChangeHandler}
-              ></Filter>
-              <ContactList
-                title="Contacts"
-                contacts={getVisibleContacts()}
-                id={loginInputId}
-                onDeleteBtn={btnDeleteHandler}
-              ></ContactList>
-            </>
-          )}
-        </div>
+        {contacts.length < 1 ? (
+          <p className={css.textApp}> You have no contacts saved</p>
+        ) : (
+          <>
+            <Filter value={filter} changeFilter={filtrChangeHandler}></Filter>
+            <ContactList
+              title="Contacts"
+              contacts={getVisibleContacts()}
+              id={loginInputId}
+              onDeleteBtn={btnDeleteHandler}
+            ></ContactList>
+          </>
+        )}
       </div>
-    );
-  
-}
+    </div>
+  );
+};
