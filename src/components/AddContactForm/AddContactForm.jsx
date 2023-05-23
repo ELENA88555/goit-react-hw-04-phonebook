@@ -22,6 +22,7 @@ if (name==='number') setNumber(value)
 const  handleSubmitForm = event => {
     event.preventDefault();
     onSubmit({name, number});
+    // console.log( onSubmit({name, number}))
     setName('')
     setNumber('')
   };
