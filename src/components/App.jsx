@@ -7,22 +7,25 @@ import css from './App.module.css';
 
 export const App = ()=> {
 
-  const [ contacts, setContacts] = useState([])
+  const [ contacts, setContacts] = useState(()=> JSON.parse(window.localStorage.getItem('contact'))?? [])
   const [filter, setFilter] = useState('')
 
 
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  // useEffect(()=> {
+  //   window.localStorage.setItem('NewContacts', JSON.stringify(contacts))
+  //   },[contacts])
+
+  // useEffect(()=>{
+  //   const contactsSave = localStorage.getItem('NewContacts');
+  //   const parsedContacts = JSON.parse(contactsSave);
+  //   parsedContacts && setContacts(parsedContacts) 
+  //   }, []);
 
 
-
-  useEffect(()=>{
-    const contactsSave = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contactsSave);
-    parsedContacts && setContacts(parsedContacts) 
-    }, []);
-
-  useEffect(()=> {
-    localStorage.setItem('contacts', JSON.stringify(contacts))
-    },[contacts])
 
 
  const loginInputId = nanoid();
